@@ -1,0 +1,36 @@
+@model CRUDROLES.Models.LibrosAutor
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 style="text-align: center;">Edit</h1>
+
+<h4 style="text-aling: center;">LibrosAutor</h4>
+<hr />
+<div class="center-form">
+    <div class="form-container">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Idlibroautor" />
+            <div class="form-group">
+                <label asp-for="Idautor" class="control-label"></label>
+                <select asp-for="Idautor" class="form-control" asp-items="ViewBag.Idautor"></select>
+                <span asp-validation-for="Idautor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Isbn" class="control-label"></label>
+                <select asp-for="Isbn" class="form-control" asp-items="ViewBag.Isbn"></select>
+                <span asp-validation-for="Isbn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn bg-secondary text-white">Back to List</a>
+</div>
+

@@ -1,0 +1,249 @@
+
+@model IEnumerable<CRUDROLES.Models.Editoriale>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1 style="text-align: center; font-size: 32px;">Lista de Editoriales</h1>
+<br />
+
+<style>
+	.botonCopiar {
+		background-color: #cccccc;
+	}
+	.botonCopiar:hover {
+		background-color: #b3b3b3;
+	}
+
+	.botonCsv {
+		background-color: #5782F4;
+	}
+	.botonCsv:hover {
+		background-color: #3e66b3;
+	}
+
+	.botonExcel {
+		background-color: #A9D56E;
+	}
+	.botonExcel:hover {
+		background-color: #267a1e;
+	}
+
+	.botonPdf {
+		background-color: #A8D5BA;
+	}
+	.botonPdf:hover {
+		background-color: #8ac7a6;
+	}
+
+	.botonPrint {
+		background-color: #C2CB38;
+	}
+	.botonPrint:hover {
+		background-color: #a0a92f;
+	}
+
+	.botonColvis {
+		background-color: #8E635D;
+	}
+	.botonColvis:hover {
+		background-color: #73524a;
+	}
+</style>
+
+<style>
+  thead {
+    background-color: #cce0ff;
+    color: #333;
+  }
+
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+<p>
+	<a asp-action="Create" class="btn btn-success">Crear editoriales</a>
+</p>
+
+
+<div class="table-container">
+<table class="table" id="example">
+	<thead>
+		<tr>
+			<th>
+				<a asp-action="Index" asp-route-filtro="@ViewData["FiltroCodigoCategoria"]">
+					@Html.DisplayNameFor(model => model.Nit)
+				</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-filtro="@ViewData["FiltroNombre"]">
+					Nombre
+				</a>
+			</th>
+            <th>
+					@Html.DisplayNameFor(model => model.Telefono)
+				</a>
+			</th>
+            <th>
+					@Html.DisplayNameFor(model => model.Direccion)
+				</a>
+			</th>
+            <th>
+					@Html.DisplayNameFor(model => model.Email)
+				</a>
+			</th>
+            <th>
+					@Html.DisplayNameFor(model => model.Sitioweb)
+				</a>
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Nit)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Nombres)
+				</td>
+                <td>
+					@Html.DisplayFor(modelItem => item.Telefono)
+				</td>
+                <td>
+					@Html.DisplayFor(modelItem => item.Direccion)
+				</td>
+                <td>
+					@Html.DisplayFor(modelItem => item.Email)
+				</td>
+                <td>
+					@Html.DisplayFor(modelItem => item.Sitioweb)
+				</td>
+				<td>
+					<div class="d-flex justify-content-around">
+                            <a class="btn btn-secondary table-action-btn" asp-action="Edit" asp-route-id="@item.Nit" title="Editar">
+            					<img src="images/editar.png" alt="Editar" style="width: 16px; height: 16px;">
+                            </a>
+                            <a class="btn btn-info table-action-btn" asp-action="Details" asp-route-id="@item.Nit" title="Detalles">
+								<img src="images/buscar.png" alt="Detalles tan bonitos" style="width: 16px; height: 16px;">
+                            </a>
+                            <!-- Botón Eliminar con SweetAlert -->
+                            <form id="deleteForm-@item.Nit" method="post" asp-action="Delete" asp-route-id="@item.Nit" style="display:none;">
+                                <button type="submit" id="deleteButton-@item.Nit"></button>
+                            </form>
+                            <a class="btn btn-danger table-action-btn"
+                                href="javascript:void(0);"
+                                onclick="confirmDelete(@item.Nit)">
+							   	    <img src="images/borrar.png" alt="Deletes" style="width: 16px; height: 16px;">
+                                <i class="fi fi-tr-trash-xmark"></i>
+                            </a>
+                        </div>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+</div>
+
+<script>
+	function confirmDelete(id) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esta acción!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/Autors/DeleteConfirmed/' + id,  // Asegúrate de que la URL sea correcta
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Eliminado',
+                                text: response.message
+                            }).then(() => {
+                                location.reload();  // Recarga la página después de la eliminación
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se pudo eliminar',
+                                text: response.errorMessage
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ocurrió un error al intentar eliminar el autor.'
+                        });
+                    }
+                });
+            }
+        });
+        return false; // Evita la acción por defecto
+    }
+
+	new DataTable('#example', {
+		layout: {
+		topStart: {
+    buttons: [
+        {
+        extend:'copy',
+        text:'<img src="images/copiar.png" alt="Copiar" style="width: 16px; height: 16px;"> Copiar',
+        className:'botonCopiar btn'
+        },
+        {
+        extend:'csv',
+        text:'<img src="images/csv.png" alt="CSV" style="width: 16px; height: 16px;"> Exportar CSV',
+        className:'botonCsv btn'
+        },
+        {
+        extend:'excel',
+        text:'<img src="images/excel.png" alt="Excel" style="width: 16px; height: 16px;"> Exportar Excel',
+        className:'botonExcel btn'
+        },
+        {
+        extend : 'pdf',
+        text:'<img src="images/pdf.png" alt="PDF" style="width: 16px; height: 16px;"> Exportar PDF',
+        className:'botonPdf btn'
+		},
+        {
+        extend:'print',
+        text:'<img src="images/imprimir.png" alt="Imprimir" style="width: 16px; height: 16px;"> Imprimir',
+        className:'botonPrint btn'
+        },
+        {
+        extend:'colvis',
+        text:'<img src="images/filtrar.png" alt="Filtrar" style="width: 16px; height: 16px;"> Filtrar',
+        className:'botonColvis btn'
+        }
+
+]
+}
+		},
+		language:{
+			url: 'https://cdn.datatables.net/plug-ins/2.0.2/i18n/es-ES.json',
+		},
+		scrollX:true,
+		initComplete: function(json,settings){
+			$(".dt-buttons").removeClass("dt-buttons");
+			//agregar clase para añadir estilos 
+			$(".dt-button").addClass("botones");
+			//Elimina la clase de los estilos por defecto de tadatables
+			$(".dt-button").addClass("botones");
+		}
+	});
+</script>

@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    /* Fondo de la página */
+    body {
+        background-color: #f4f4f4; /* Fondo blanco */
+        color: #333; /* Texto oscuro para contraste */
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Contenedor principal */
+    .home-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    /* Títulos */
+    .home-title {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        color: #333; /* Título en gris oscuro */
+    }
+
+    .home-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        color: #555; /* Subtítulo en gris medio */
+    }
+
+    /* Estilo de las imágenes */
+    .foto {
+        max-width: 400px;
+        width: 100%;
+        border: 3px solid #333; /* Borde gris oscuro */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+        transition: transform 0.3s ease;
+    }
+
+    .foto:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Sombra más intensa al pasar el cursor */
+    }
+
+    /* Contenedor de las imágenes, ahora al lado con flexbox */
+    .imagenes-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px; /* Espacio entre las imágenes */
+        flex-wrap: wrap; /* Asegura que las imágenes se acomoden en pantallas pequeñas */
+    }
+</style>
+
+<div class="home-container text-center">
+    <h1 class="home-title display-4">Bienvenido a la vista más bonita del SENA</h1>
+    <h4 class="home-subtitle">Este soy yo</h4>
+    
+    <!-- Contenedor de las imágenes al lado -->
+    <div class="imagenes-container">
+        <img class="foto" src="images/Wudy.jpeg" alt="Foto del pingüino">
+        <img class="foto" src="images/boby.jpeg" alt="Foto de mi amada">
+    </div>
+</div>
+

@@ -1,0 +1,116 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: blue;
+}
+
+.center-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  flex-direction: column;
+}
+
+.form-container {
+  width: 50%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.imagenes-container {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.foto {
+  width: 100px;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .imagenes-container {
+    justify-content: space-between;
+  }
+
+  .foto {
+    width: 80px;
+  }
+}
+
+.center-content {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+#example th {
+  text-align: center;
+}
+
+#example td {
+  text-align: center;
+}
+
+#example tbody tr {
+  text-align: center;
+}
+
+body {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+thead {
+  background-color: #cce0ff;
+  color: #fff;
+}
+
+thead th {
+  padding: 10px;
+  text-align: center;
+}
+
+tbody {
+  background-color: #f2f9ff;
+  color: #333;
+}
+
+tbody tr:hover {
+  background-color: #e9ecef;
+}
+
+tbody td {
+  padding: 10px;
+  text-align: center;
+}
