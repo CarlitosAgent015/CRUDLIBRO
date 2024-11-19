@@ -163,27 +163,24 @@ namespace CRUDROLES.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
-            if (categoria != null)
-            {
-                // si nose encuentra la categoria, devuelve un mensaje de error
-                return Json(new { success = false, errorMessage = "La categoria no fue encontrada." });
-            }
+        var categoria = await _context.Categorias.FindAsync(id);
 
-            bool tieneRelacion = await _context.Libros.AnyAsync(la => la.CodigoCategoria == id);
+        if (categoria == null)
+        {
+            return Json(new { success = false, errorMessage = "La categoría no fue encontrada." });
+        }
 
-            if (tieneRelacion)
-            {
-                // Si esta relacionado, nose puede eliminar
-                return Json(new { success = false, errorMessage = "No se puede eliminar la categoria porque está relacionado con otros registros." });
-            }
+        bool tieneRelacion = await _context.Libros.AnyAsync(l => l.CodigoCategoria == id);
 
-            // si no esta relacionado, eliminamos la categoria
-            _context.Categorias.Remove(categoria);
-            await _context.SaveChangesAsync();
+        if (tieneRelacion)
+        {
+            return Json(new { success = false, errorMessage = "No se puede eliminar la categoría porque está relacionada con otros registros." });
+        }
 
-            // Si la eliminación es exitosa, devolver un mensaje de éxito
-            return Json(new { success = true, message = "Autor eliminado correctamente." });
+        _context.Categorias.Remove(categoria);
+        await _context.SaveChangesAsync();
+
+        return Json(new { success = true, message = "Categoría eliminada correctamente." });
         }
     }
 }

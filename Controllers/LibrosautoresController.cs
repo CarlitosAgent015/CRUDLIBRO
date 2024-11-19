@@ -148,10 +148,6 @@ namespace CRUDROLES.Controllers
             return View(librosAutor);
         }
 
-        private bool LibrosAutorExists(int Idlibroautor)
-        {
-            throw new NotImplementedException();
-        }
         [HttpPost]
         // GET: Librosautores/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -162,8 +158,6 @@ namespace CRUDROLES.Controllers
             }
 
             var librosAutor = await _context.LibrosAutors
-                .Include(l => l.IdautorNavigation)
-                .Include(l => l.IsbnNavigation)
                 .FirstOrDefaultAsync(m => m.Idlibroautor == id);
             if (librosAutor == null)
             {
@@ -185,18 +179,15 @@ namespace CRUDROLES.Controllers
             return Json(new { success = false, errorMessage = "El libro autor no fue encontrado." });
             }
 
-            bool tieneRelacion = await _context.LibrosAutors.AnyAsync(la => la.Idlibroautor == id);
-
-            if (tieneRelacion)
-            {
-            // Si está relacionado, no se puede eliminar
-            return Json(new { success = false, errorMessage = "No se puede eliminar el libro autor porque está relacionado con otros registros." });
-            }
 
             _context.LibrosAutors.Remove(librosAutor);
             await _context.SaveChangesAsync();
         // Si la eliminación es exitosa, devolver un mensaje de éxito
         return Json(new { success = true, message = "Libro Autor eliminado correctamente." });
+        }
+        private bool LibrosAutorExists(int id)
+        {
+            return _context.LibrosAutors.Any(e => e.Idlibroautor == id);
         }
     }
 }

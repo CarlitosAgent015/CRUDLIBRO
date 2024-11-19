@@ -1,7 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDROLES.Models
 {
@@ -10,6 +10,7 @@ namespace CRUDROLES.Models
         // El NIT debe ser obligatorio y positivo
         [Required(ErrorMessage = "El NIT es obligatorio.")]
         [Range(1, int.MaxValue, ErrorMessage = "El NIT debe ser un número positivo.")]
+        [UnicidadNitValidation] // Validación personalizada para evitar duplicados de NIT
         public int Nit { get; set; }
 
         // El nombre de la editorial es obligatorio y con una longitud entre 3 y 100 caracteres
@@ -38,6 +39,26 @@ namespace CRUDROLES.Models
 
         // Relación con libros, sin validaciones explícitas
         public virtual ICollection<Libro> Libros { get; set; } = new List<Libro>();
+
+        // Clase de validación personalizada para verificar la unicidad del NIT
+        public class UnicidadNitValidation : ValidationAttribute
+        {
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+                var context = (MiDbContext)validationContext.GetService(typeof(MiDbContext));
+
+                // Obtener el valor del NIT
+                var nit = (int)value;
+
+                // Verificar si el NIT ya existe en la base de datos
+                if (context.Editoriales.Any(e => e.Nit == nit))
+                {
+                    return new ValidationResult("El NIT de la editorial ya existe.");
+                }
+
+                // Si el NIT no está duplicado, la validación es exitosa
+                return ValidationResult.Success;
+            }
+        }
     }
 }
-

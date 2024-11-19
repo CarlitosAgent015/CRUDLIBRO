@@ -33,7 +33,7 @@ namespace CRUDROLES.Controllers
             switch (filtro)
             {
                 case "NombresDescendente":
-                    editoriales = editoriales.OrderByDescending(editoriale => editoriale.Nit);
+                    editoriales = editoriales.OrderByDescending(editoriale => editoriale.Nombres);
                     break;
                 case "NitDescendente":
                     editoriales = editoriales.OrderByDescending(editoriale => editoriale.Nombres);
@@ -137,10 +137,6 @@ namespace CRUDROLES.Controllers
             return View(editoriale);
         }
 
-        private bool EditorialeExists(int Nit)
-        {
-            throw new NotImplementedException();
-        }
         // GET: Editoriales/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -171,7 +167,7 @@ namespace CRUDROLES.Controllers
             return Json(new { success = false, errorMessage = "La editorial no fue encontrado." });
             }
 
-            bool tieneRelacion = await _context.Editoriales.AnyAsync(la => la.Nit == id);
+            bool tieneRelacion = await _context.Libros.AnyAsync(la => la.NitEditorial == id);
 
             if (tieneRelacion)
             {
@@ -183,6 +179,11 @@ namespace CRUDROLES.Controllers
             await _context.SaveChangesAsync();
         // Si la eliminación es exitosa, devolver un mensaje de éxito
         return Json(new { success = true, message = "Editorial eliminado correctamente." });
+        }
+
+        private bool EditorialeExists(int id)
+        {
+            return _context.Editoriales.Any(e => e.Nit == id);
         }
     }
 }

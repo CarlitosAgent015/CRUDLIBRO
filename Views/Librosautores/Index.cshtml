@@ -66,7 +66,7 @@
 
 
 <p>
-	<a asp-action="Create" class="btn btn-success">Crear libros-autor</a>
+	<a asp-action="Create" class="btn btn-success">Crear libro-autor</a>
 </p>
 
 <div class="table-container">
@@ -131,48 +131,55 @@
 <script>
 	
 	function confirmDelete(id) {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "¡No podrás revertir esta acción!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '/Autors/DeleteConfirmed/' + id,  // Asegúrate de que la URL sea correcta
-                    type: 'POST',
-                    data: { id: id },
-                    success: function (response) {
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Eliminado',
-                                text: response.message
-                            }).then(() => {
-                                location.reload();  // Recarga la página después de la eliminación
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'No se pudo eliminar',
-                                text: response.errorMessage
-                            });
-                        }
-                    },
-                    error: function (xhr, status, error) {
+    Swal.fire({
+        title: 'Confirmación de Eliminación',
+        text: "¿Estás seguro de eliminar esta editorial?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        background: '#f5f5f5',
+        color: '#333'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/Librosautores/DeleteConfirmed/' + id, // URL correcta
+                type: 'POST',
+                headers: {
+                    "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() // Token para seguridad
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Eliminado!',
+                            text: response.message,
+                            confirmButtonColor: '#28a745',
+                        }).then(() => {
+                            location.reload(); // Recarga la página
+                        });
+                    } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Ocurrió un error al intentar eliminar el autor.'
+                            text: response.errorMessage
                         });
                     }
-                });
-            }
-        });
-        return false; // Evita la acción por defecto
-    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo procesar la solicitud de eliminación.'
+                    });
+                }
+            });
+        }
+    });
+}
+
 
 	new DataTable('#example', {
 		layout: {
@@ -225,3 +232,20 @@
 		}
 	});
 </script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    @if (ViewData["IsbnError"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '@ViewData["IsbnError"]',
+                confirmButtonText: 'Aceptar'
+            });
+        </script>
+    }
+}
